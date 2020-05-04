@@ -4,29 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.TinyIoc;
 
 namespace NeoComplexxTest_BackEnd.modules
 {
     public class ClientesModule : NancyModule
     {
-        private ClientesHandler clientesHandler;
-
-        public class ClienteModel
+        public class Bootstrap : DefaultNancyBootstrapper
         {
-            public string name { get; set; }
-            public string surname { get; set; }
-            public string address { get; set; }
+            protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+            {
+                container.Register<ClientesService>(ClientesServiceImp.Instance);
+
+                base.ConfigureApplicationContainer(container);
+            }
         }
 
-        public ClientesModule() : base("/clientes")
+        public ClientesModule(ClientesService clientesService) : base("/clientes")
         {
-            clientesHandler = ClientesHandler.Instance;
 
-            Get("/", args => { return clientesHandler.getClientes(); });
+            Get("/", args => { return clientesService.getClientes(); });
 
             Get("/{id}", args =>
             {
-                Cliente cliente = clientesHandler.getCliente(args.id);
+                Cliente cliente = clientesService.getCliente(args.id);
                 if (cliente != null)
                 {
                     return cliente;
@@ -39,36 +40,47 @@ namespace NeoComplexxTest_BackEnd.modules
 
             Post("/", args =>
             {
-                var cliente = this.Bind<ClienteModel>();
-                if (clientesHandler.createCliente(cliente.name, cliente.surname, cliente.address))
+                var cliente = this.Bind<Cliente>();
+                if (cliente.name == null || cliente.surname == null || cliente.address == null)
                 {
-                    return 200;
+                    return new Response { StatusCode = HttpStatusCode.Forbidden };
                 }
                 else
                 {
-                    return new Response { StatusCode = HttpStatusCode.InternalServerError };
+                    return clientesService.createCliente(cliente);
                 }
             });
 
             Put("/{id}", args =>
             {
-                var cliente = this.Bind<ClienteModel>();
-                if (clientesHandler.editCliente(args.id, cliente.name, cliente.surname, cliente.address))
+                var cliente = this.Bind<Cliente>();
+                cliente.id = args.id;
+                if (cliente.name == null || cliente.surname == null || cliente.address == null)
                 {
-                    return 200;
+                    return new Response { StatusCode = HttpStatusCode.Forbidden };
                 }
                 else
                 {
-                    return new Response { StatusCode = HttpStatusCode.NotFound };
+                    Cliente edited = clientesService.editCliente(cliente);
+                    if (edited == null)
+                    {
+                        return new Response { StatusCode = HttpStatusCode.NotFound };
+                    }
+                    else
+                    {
+                        return edited;
+                    }
                 }
             });
 
             Delete("/{id}", args =>
             {
-                if(clientesHandler.deleteCliente(args.id)){
-                    return 200;
+                if (clientesService.deleteCliente(args.id))
+                {
+                    return 204;
                 }
-                else{
+                else
+                {
                     return new Response { StatusCode = HttpStatusCode.NotFound };
                 }
             });
