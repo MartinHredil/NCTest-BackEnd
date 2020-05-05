@@ -1,8 +1,7 @@
 public class Cliente
 {
-    public string name {set;get;}
-    public string surname {set;get;}
-    public string address {set;get;}
-    public int id {set;get;}
-
+    public string Name {get;set;}
+    public string Surname {get;set;}
+    public string Address {get;set;}
+    public int Id {get;set;}
 }

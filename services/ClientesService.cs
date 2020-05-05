@@ -1,37 +1,28 @@
 using System.Collections.Generic;
-public sealed class ClientesServiceImp : ClientesService
+public class ClientesService : IClientesService
 {
-    private readonly static ClientesServiceImp instance = new ClientesServiceImp();
     private List<Cliente> clientes;
     private int count;
 
-    private ClientesServiceImp()
+    public ClientesService()
     {
         count = 1;
         clientes = new List<Cliente>();
     }
 
-    public static ClientesServiceImp Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
-    public List<Cliente> getClientes()
+    public IList<Cliente> getClientes()
     {
         return clientes;
     }
 
     public Cliente getCliente(int id)
     {
-        return clientes.Find((item) => item.id == id);
+        return clientes.Find((item) => item.Id == id);
     }
 
     public Cliente createCliente(Cliente cliente)
     {
-        cliente.id = count;
+        cliente.Id = count;
         count++;
         clientes.Add(cliente);
         return cliente;
@@ -39,14 +30,14 @@ public sealed class ClientesServiceImp : ClientesService
 
     public Cliente editCliente(Cliente cliente)
     {
-        int index = clientes.FindIndex((item) => item.id == cliente.id);
+        int index = clientes.FindIndex((item) => item.Id == cliente.Id);
         if (index >= 0)
         {
             Cliente editar = new Cliente();
-            editar.name=cliente.name;
-            editar.surname=cliente.surname;
-            editar.address=cliente.address;
-            editar.id = cliente.id;
+            editar.Name=cliente.Name;
+            editar.Surname=cliente.Surname;
+            editar.Address=cliente.Address;
+            editar.Id = cliente.Id;
             clientes[index] = editar;
             return editar;
         }
@@ -57,7 +48,7 @@ public sealed class ClientesServiceImp : ClientesService
 
     public bool deleteCliente(int id)
     {
-        int index = clientes.FindIndex((item) => item.id == id);
+        int index = clientes.FindIndex((item) => item.Id == id);
         if(index>=0){
             clientes.RemoveAt(index);
             return true;

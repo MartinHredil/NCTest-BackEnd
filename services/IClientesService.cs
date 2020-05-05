@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-public interface ClientesService{
-    List<Cliente> getClientes();
+public interface IClientesService{
+    IList<Cliente> getClientes();
     Cliente getCliente(int id);
     Cliente createCliente(Cliente cliente);
     Cliente editCliente(Cliente cliente);

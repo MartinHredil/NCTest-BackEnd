@@ -10,17 +10,7 @@ namespace NeoComplexxTest_BackEnd.modules
 {
     public class ClientesModule : NancyModule
     {
-        public class Bootstrap : DefaultNancyBootstrapper
-        {
-            protected override void ConfigureApplicationContainer(TinyIoCContainer container)
-            {
-                container.Register<ClientesService>(ClientesServiceImp.Instance);
-
-                base.ConfigureApplicationContainer(container);
-            }
-        }
-
-        public ClientesModule(ClientesService clientesService) : base("/clientes")
+        public ClientesModule(IClientesService clientesService) : base("/clientes")
         {
 
             Get("/", args => { return clientesService.getClientes(); });
@@ -41,7 +31,7 @@ namespace NeoComplexxTest_BackEnd.modules
             Post("/", args =>
             {
                 var cliente = this.Bind<Cliente>();
-                if (cliente.name == null || cliente.surname == null || cliente.address == null)
+                if (cliente.Name == null || cliente.Surname == null || cliente.Address == null)
                 {
                     return new Response { StatusCode = HttpStatusCode.Forbidden };
                 }
@@ -54,8 +44,8 @@ namespace NeoComplexxTest_BackEnd.modules
             Put("/{id}", args =>
             {
                 var cliente = this.Bind<Cliente>();
-                cliente.id = args.id;
-                if (cliente.name == null || cliente.surname == null || cliente.address == null)
+                cliente.Id = args.id;
+                if (cliente.Name == null || cliente.Surname == null || cliente.Address == null)
                 {
                     return new Response { StatusCode = HttpStatusCode.Forbidden };
                 }
