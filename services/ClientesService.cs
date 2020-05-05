@@ -10,17 +10,17 @@ public class ClientesService : IClientesService
         clientes = new List<Cliente>();
     }
 
-    public IList<Cliente> getClientes()
+    public IList<Cliente> GetClientes()
     {
         return clientes;
     }
 
-    public Cliente getCliente(int id)
+    public Cliente GetCliente(int id)
     {
         return clientes.Find((item) => item.Id == id);
     }
 
-    public Cliente createCliente(Cliente cliente)
+    public Cliente CreateCliente(Cliente cliente)
     {
         cliente.Id = count;
         count++;
@@ -28,7 +28,7 @@ public class ClientesService : IClientesService
         return cliente;
     }
 
-    public Cliente editCliente(Cliente cliente)
+    public Cliente EditCliente(Cliente cliente)
     {
         int index = clientes.FindIndex((item) => item.Id == cliente.Id);
         if (index >= 0)
@@ -46,7 +46,7 @@ public class ClientesService : IClientesService
         }
     }
 
-    public bool deleteCliente(int id)
+    public bool DeleteCliente(int id)
     {
         int index = clientes.FindIndex((item) => item.Id == id);
         if(index>=0){

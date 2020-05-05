@@ -13,11 +13,11 @@ namespace NeoComplexxTest_BackEnd.modules
         public ClientesModule(IClientesService clientesService) : base("/clientes")
         {
 
-            Get("/", args => { return clientesService.getClientes(); });
+            Get("/", args => { return clientesService.GetClientes(); });
 
             Get("/{id}", args =>
             {
-                Cliente cliente = clientesService.getCliente(args.id);
+                Cliente cliente = clientesService.GetCliente(args.id);
                 if (cliente != null)
                 {
                     return cliente;
@@ -37,7 +37,7 @@ namespace NeoComplexxTest_BackEnd.modules
                 }
                 else
                 {
-                    return clientesService.createCliente(cliente);
+                    return clientesService.CreateCliente(cliente);
                 }
             });
 
@@ -51,7 +51,7 @@ namespace NeoComplexxTest_BackEnd.modules
                 }
                 else
                 {
-                    Cliente edited = clientesService.editCliente(cliente);
+                    Cliente edited = clientesService.EditCliente(cliente);
                     if (edited == null)
                     {
                         return new Response { StatusCode = HttpStatusCode.NotFound };
@@ -65,7 +65,7 @@ namespace NeoComplexxTest_BackEnd.modules
 
             Delete("/{id}", args =>
             {
-                if (clientesService.deleteCliente(args.id))
+                if (clientesService.DeleteCliente(args.id))
                 {
                     return 204;
                 }
